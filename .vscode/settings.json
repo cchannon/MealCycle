@@ -1,0 +1,9 @@
+{
+  "chat.promptFilesLocations": {
+    ".github/prompts": true
+  },
+  "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+  "chat.promptFilesRecommendations": {
+    ".github/prompts": true
+  }
+}

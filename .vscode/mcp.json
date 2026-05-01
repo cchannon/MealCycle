@@ -1,0 +1,37 @@
+{
+  "inputs": [
+    {
+      "id": "github-token",
+      "type": "promptString",
+      "description": "GitHub Personal Access Token (or use GITHUB_TOKEN env var)",
+      "password": true
+    },
+    {
+      "id": "postgres-connection",
+      "type": "promptString",
+      "description": "PostgreSQL connection string (e.g. postgresql://user:pass@host:5432/dbname)",
+      "password": true
+    }
+  ],
+  "servers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${input:github-token}"
+      }
+    },
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres", "${input:postgres-connection}"]
+    },
+    "azure": {
+      "command": "npx",
+      "args": ["-y", "@azure/mcp@latest", "server", "start"]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    }
+  }
+}
