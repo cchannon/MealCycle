@@ -2,6 +2,8 @@
 
 This folder contains pre-provisioning scaffolding so we can discuss and confirm infrastructure choices before creating cloud resources.
 
+<!-- Trigger note: workflow retry via infra path change -->
+
 ## Scope prepared
 
 - Azure Storage Account design for Table Storage-backed persistence
