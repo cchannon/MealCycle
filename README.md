@@ -76,6 +76,12 @@ These steps are written for public, anonymous users who want to replicate this s
 2. Add federated credentials scoped to this GitHub repository/workflow.
 3. Grant least-privilege role assignments at the target scope (typically `Contributor` on each environment resource group).
 
+Required role assignments for this workflow pattern:
+1. `Contributor` on the target resource group used by `AZURE_RESOURCE_GROUP`.
+2. `Reader` on the subscription used by `AZURE_SUBSCRIPTION_ID`.
+
+Without subscription visibility, OIDC login can succeed but deployment commands may fail with subscription discovery/authorization errors.
+
 Capture these values from Azure:
 - `AZURE_CLIENT_ID`
 - `AZURE_TENANT_ID`
@@ -140,6 +146,10 @@ Set variables in GitHub:
   - `infra/main.staging.parameters.json`
   - `infra/main.production.parameters.json`
 
+Table naming note:
+1. Azure Table names in parameters must be alphanumeric only for this deployment flow.
+2. Avoid hyphens in table names (for example, use `mealplanitems` instead of `meal-plan-items`).
+
 ### 5. CI/CD deployment flow
 
 Recommended workflow pattern:
@@ -195,6 +205,7 @@ az deployment group what-if `
 2. Prefer managed identity + Key Vault for runtime secrets.
 3. Keep environment promotion order strict: `dev` -> `staging` -> `production`.
 4. Treat Bicep changes as code changes requiring PR review.
+5. The workflow trigger is path-filtered; push changes under `infra/**` or `.github/workflows/infra-deploy.yml` to run automatic deploy on `main`.
 
 ## Next Implementation Steps
 
