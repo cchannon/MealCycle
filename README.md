@@ -163,7 +163,7 @@ Deployment output handling:
 
 This is the bridge to persistence rollout:
 1. The infra workflow now includes an automatic runtime-configuration step.
-2. When `AZURE_WEBAPP_NAME` and or `AZURE_FUNCTIONAPP_NAME` is configured, the workflow writes runtime settings automatically:
+2. When `AZURE_WEBAPP_NAME` and/or `AZURE_FUNCTIONAPP_NAME` is configured, the workflow writes runtime settings automatically:
   - `Persistence__Provider`
   - `AzureStorage__TableServiceUri`
   - `AzureStorage__RecipesTableName`
