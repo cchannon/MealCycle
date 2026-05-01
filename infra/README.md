@@ -3,6 +3,7 @@
 This folder contains pre-provisioning scaffolding so we can discuss and confirm infrastructure choices before creating cloud resources.
 
 <!-- Trigger note: workflow retry via infra path change -->
+<!-- Trigger note: workflow retry after RBAC assignment -->
 
 ## Scope prepared
 
