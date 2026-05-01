@@ -40,6 +40,8 @@ jobs:
       AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+      AZURE_WEBAPP_NAME: ${{ vars.AZURE_WEBAPP_NAME || '' }}
+      AZURE_FUNCTIONAPP_NAME: ${{ vars.AZURE_FUNCTIONAPP_NAME || '' }}
       PARAM_FILE: infra/main.dev.parameters.json
     steps:
       - name: Checkout
@@ -86,6 +88,37 @@ jobs:
           echo "mealPlanTableName=$(jq -r '.properties.outputs.mealPlanTableOutput.value // empty' deployment-result.json)" >> "$GITHUB_OUTPUT"
           echo "cookProgressTableName=$(jq -r '.properties.outputs.cookProgressTableOutput.value // empty' deployment-result.json)" >> "$GITHUB_OUTPUT"
 
+      - name: Apply runtime settings to App Service (optional)
+        if: env.AZURE_WEBAPP_NAME != ''
+        run: |
+          az webapp config appsettings set \
+            --name "$AZURE_WEBAPP_NAME" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --settings \
+              Persistence__Provider=AzureTable \
+              AzureStorage__TableServiceUri="${{ steps.extract_outputs.outputs.storageTableEndpoint }}" \
+              AzureStorage__RecipesTableName="${{ steps.extract_outputs.outputs.recipesTableName }}" \
+              AzureStorage__MealPlanTableName="${{ steps.extract_outputs.outputs.mealPlanTableName }}" \
+              AzureStorage__CookProgressTableName="${{ steps.extract_outputs.outputs.cookProgressTableName }}"
+
+      - name: Apply runtime settings to Function App (optional)
+        if: env.AZURE_FUNCTIONAPP_NAME != ''
+        run: |
+          az functionapp config appsettings set \
+            --name "$AZURE_FUNCTIONAPP_NAME" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --settings \
+              Persistence__Provider=AzureTable \
+              AzureStorage__TableServiceUri="${{ steps.extract_outputs.outputs.storageTableEndpoint }}" \
+              AzureStorage__RecipesTableName="${{ steps.extract_outputs.outputs.recipesTableName }}" \
+              AzureStorage__MealPlanTableName="${{ steps.extract_outputs.outputs.mealPlanTableName }}" \
+              AzureStorage__CookProgressTableName="${{ steps.extract_outputs.outputs.cookProgressTableName }}"
+
+      - name: Runtime settings target not configured
+        if: env.AZURE_WEBAPP_NAME == '' && env.AZURE_FUNCTIONAPP_NAME == ''
+        run: |
+          echo "No AZURE_WEBAPP_NAME or AZURE_FUNCTIONAPP_NAME variable configured. Skipping runtime app settings update."
+
       - name: Upload deployment result artifact
         uses: actions/upload-artifact@v4
         with:
@@ -119,6 +152,8 @@ jobs:
       AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+      AZURE_WEBAPP_NAME: ${{ vars.AZURE_WEBAPP_NAME || '' }}
+      AZURE_FUNCTIONAPP_NAME: ${{ vars.AZURE_FUNCTIONAPP_NAME || '' }}
       PARAM_FILE: infra/main.staging.parameters.json
     steps:
       - name: Checkout
@@ -165,6 +200,37 @@ jobs:
           echo "mealPlanTableName=$(jq -r '.properties.outputs.mealPlanTableOutput.value // empty' deployment-result.json)" >> "$GITHUB_OUTPUT"
           echo "cookProgressTableName=$(jq -r '.properties.outputs.cookProgressTableOutput.value // empty' deployment-result.json)" >> "$GITHUB_OUTPUT"
 
+      - name: Apply runtime settings to App Service (optional)
+        if: env.AZURE_WEBAPP_NAME != ''
+        run: |
+          az webapp config appsettings set \
+            --name "$AZURE_WEBAPP_NAME" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --settings \
+              Persistence__Provider=AzureTable \
+              AzureStorage__TableServiceUri="${{ steps.extract_outputs.outputs.storageTableEndpoint }}" \
+              AzureStorage__RecipesTableName="${{ steps.extract_outputs.outputs.recipesTableName }}" \
+              AzureStorage__MealPlanTableName="${{ steps.extract_outputs.outputs.mealPlanTableName }}" \
+              AzureStorage__CookProgressTableName="${{ steps.extract_outputs.outputs.cookProgressTableName }}"
+
+      - name: Apply runtime settings to Function App (optional)
+        if: env.AZURE_FUNCTIONAPP_NAME != ''
+        run: |
+          az functionapp config appsettings set \
+            --name "$AZURE_FUNCTIONAPP_NAME" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --settings \
+              Persistence__Provider=AzureTable \
+              AzureStorage__TableServiceUri="${{ steps.extract_outputs.outputs.storageTableEndpoint }}" \
+              AzureStorage__RecipesTableName="${{ steps.extract_outputs.outputs.recipesTableName }}" \
+              AzureStorage__MealPlanTableName="${{ steps.extract_outputs.outputs.mealPlanTableName }}" \
+              AzureStorage__CookProgressTableName="${{ steps.extract_outputs.outputs.cookProgressTableName }}"
+
+      - name: Runtime settings target not configured
+        if: env.AZURE_WEBAPP_NAME == '' && env.AZURE_FUNCTIONAPP_NAME == ''
+        run: |
+          echo "No AZURE_WEBAPP_NAME or AZURE_FUNCTIONAPP_NAME variable configured. Skipping runtime app settings update."
+
       - name: Upload deployment result artifact
         uses: actions/upload-artifact@v4
         with:
@@ -198,6 +264,8 @@ jobs:
       AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+      AZURE_WEBAPP_NAME: ${{ vars.AZURE_WEBAPP_NAME || '' }}
+      AZURE_FUNCTIONAPP_NAME: ${{ vars.AZURE_FUNCTIONAPP_NAME || '' }}
       PARAM_FILE: infra/main.production.parameters.json
     steps:
       - name: Checkout
@@ -243,6 +311,37 @@ jobs:
           echo "recipesTableName=$(jq -r '.properties.outputs.recipesTableOutput.value // empty' deployment-result.json)" >> "$GITHUB_OUTPUT"
           echo "mealPlanTableName=$(jq -r '.properties.outputs.mealPlanTableOutput.value // empty' deployment-result.json)" >> "$GITHUB_OUTPUT"
           echo "cookProgressTableName=$(jq -r '.properties.outputs.cookProgressTableOutput.value // empty' deployment-result.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Apply runtime settings to App Service (optional)
+        if: env.AZURE_WEBAPP_NAME != ''
+        run: |
+          az webapp config appsettings set \
+            --name "$AZURE_WEBAPP_NAME" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --settings \
+              Persistence__Provider=AzureTable \
+              AzureStorage__TableServiceUri="${{ steps.extract_outputs.outputs.storageTableEndpoint }}" \
+              AzureStorage__RecipesTableName="${{ steps.extract_outputs.outputs.recipesTableName }}" \
+              AzureStorage__MealPlanTableName="${{ steps.extract_outputs.outputs.mealPlanTableName }}" \
+              AzureStorage__CookProgressTableName="${{ steps.extract_outputs.outputs.cookProgressTableName }}"
+
+      - name: Apply runtime settings to Function App (optional)
+        if: env.AZURE_FUNCTIONAPP_NAME != ''
+        run: |
+          az functionapp config appsettings set \
+            --name "$AZURE_FUNCTIONAPP_NAME" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --settings \
+              Persistence__Provider=AzureTable \
+              AzureStorage__TableServiceUri="${{ steps.extract_outputs.outputs.storageTableEndpoint }}" \
+              AzureStorage__RecipesTableName="${{ steps.extract_outputs.outputs.recipesTableName }}" \
+              AzureStorage__MealPlanTableName="${{ steps.extract_outputs.outputs.mealPlanTableName }}" \
+              AzureStorage__CookProgressTableName="${{ steps.extract_outputs.outputs.cookProgressTableName }}"
+
+      - name: Runtime settings target not configured
+        if: env.AZURE_WEBAPP_NAME == '' && env.AZURE_FUNCTIONAPP_NAME == ''
+        run: |
+          echo "No AZURE_WEBAPP_NAME or AZURE_FUNCTIONAPP_NAME variable configured. Skipping runtime app settings update."
 
       - name: Upload deployment result artifact
         uses: actions/upload-artifact@v4

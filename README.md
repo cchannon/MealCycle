@@ -103,6 +103,9 @@ Recommended repository/environment variables:
 - `AZURE_SUBSCRIPTION_ID`
 - `AZURE_LOCATION`
 - `AZURE_RESOURCE_GROUP`
+- Optional runtime target variables (set one or both):
+  - `AZURE_WEBAPP_NAME`
+  - `AZURE_FUNCTIONAPP_NAME`
 - `WORKLOAD_NAME` (example: `mealcycle`)
 - Optional workflow environment-name overrides:
   - `DEPLOY_ENV_DEV` (default `dev`)
@@ -159,13 +162,14 @@ Deployment output handling:
 3. The full deployment JSON is uploaded as a workflow artifact for downstream jobs.
 
 This is the bridge to persistence rollout:
-1. A follow-up app-configuration step/job can read these outputs.
-2. It can then set runtime configuration values (for example on App Service/Functions):
+1. The infra workflow now includes an automatic runtime-configuration step.
+2. When `AZURE_WEBAPP_NAME` and or `AZURE_FUNCTIONAPP_NAME` is configured, the workflow writes runtime settings automatically:
   - `Persistence__Provider`
   - `AzureStorage__TableServiceUri`
   - `AzureStorage__RecipesTableName`
   - `AzureStorage__MealPlanTableName`
   - `AzureStorage__CookProgressTableName`
+3. If neither runtime target variable is configured, deployment still succeeds and the workflow logs that runtime settings were skipped.
 
 Suggested deployment command in workflow jobs:
 
