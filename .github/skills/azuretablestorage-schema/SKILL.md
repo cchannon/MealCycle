@@ -1,5 +1,5 @@
 ---
-name: postgresql-schema
+name: azuretablestorage-schema
 description: "Azure Table Storage modeling and repository patterns for this stack. Use when designing partition/row keys, table entities, repository queries, concurrency handling with ETags, or data evolution strategy. Triggers: table storage schema, partition key, row key, ITableEntity, Azure.Data.Tables, query optimisation, soft delete."
 ---
 
