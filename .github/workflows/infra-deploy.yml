@@ -95,7 +95,6 @@ jobs:
             --name "$AZURE_WEBAPP_NAME" \
             --resource-group "$AZURE_RESOURCE_GROUP" \
             --settings \
-              Persistence__Provider=AzureTable \
               AzureStorage__TableServiceUri="${{ steps.extract_outputs.outputs.storageTableEndpoint }}" \
               AzureStorage__RecipesTableName="${{ steps.extract_outputs.outputs.recipesTableName }}" \
               AzureStorage__MealPlanTableName="${{ steps.extract_outputs.outputs.mealPlanTableName }}" \
@@ -108,7 +107,6 @@ jobs:
             --name "$AZURE_FUNCTIONAPP_NAME" \
             --resource-group "$AZURE_RESOURCE_GROUP" \
             --settings \
-              Persistence__Provider=AzureTable \
               AzureStorage__TableServiceUri="${{ steps.extract_outputs.outputs.storageTableEndpoint }}" \
               AzureStorage__RecipesTableName="${{ steps.extract_outputs.outputs.recipesTableName }}" \
               AzureStorage__MealPlanTableName="${{ steps.extract_outputs.outputs.mealPlanTableName }}" \
@@ -207,7 +205,6 @@ jobs:
             --name "$AZURE_WEBAPP_NAME" \
             --resource-group "$AZURE_RESOURCE_GROUP" \
             --settings \
-              Persistence__Provider=AzureTable \
               AzureStorage__TableServiceUri="${{ steps.extract_outputs.outputs.storageTableEndpoint }}" \
               AzureStorage__RecipesTableName="${{ steps.extract_outputs.outputs.recipesTableName }}" \
               AzureStorage__MealPlanTableName="${{ steps.extract_outputs.outputs.mealPlanTableName }}" \
@@ -220,7 +217,6 @@ jobs:
             --name "$AZURE_FUNCTIONAPP_NAME" \
             --resource-group "$AZURE_RESOURCE_GROUP" \
             --settings \
-              Persistence__Provider=AzureTable \
               AzureStorage__TableServiceUri="${{ steps.extract_outputs.outputs.storageTableEndpoint }}" \
               AzureStorage__RecipesTableName="${{ steps.extract_outputs.outputs.recipesTableName }}" \
               AzureStorage__MealPlanTableName="${{ steps.extract_outputs.outputs.mealPlanTableName }}" \
@@ -319,7 +315,6 @@ jobs:
             --name "$AZURE_WEBAPP_NAME" \
             --resource-group "$AZURE_RESOURCE_GROUP" \
             --settings \
-              Persistence__Provider=AzureTable \
               AzureStorage__TableServiceUri="${{ steps.extract_outputs.outputs.storageTableEndpoint }}" \
               AzureStorage__RecipesTableName="${{ steps.extract_outputs.outputs.recipesTableName }}" \
               AzureStorage__MealPlanTableName="${{ steps.extract_outputs.outputs.mealPlanTableName }}" \
@@ -332,7 +327,6 @@ jobs:
             --name "$AZURE_FUNCTIONAPP_NAME" \
             --resource-group "$AZURE_RESOURCE_GROUP" \
             --settings \
-              Persistence__Provider=AzureTable \
               AzureStorage__TableServiceUri="${{ steps.extract_outputs.outputs.storageTableEndpoint }}" \
               AzureStorage__RecipesTableName="${{ steps.extract_outputs.outputs.recipesTableName }}" \
               AzureStorage__MealPlanTableName="${{ steps.extract_outputs.outputs.mealPlanTableName }}" \

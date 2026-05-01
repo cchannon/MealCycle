@@ -1,6 +1,6 @@
 using MealCycle.Application.Features.MealPlans;
 using MealCycle.Application.Services;
-using MealCycle.Infrastructure.Repositories;
+using MealCycle.UnitTests.Fakes;
 
 namespace MealCycle.UnitTests;
 
@@ -9,8 +9,8 @@ public sealed class MealPlanServiceTests
     [Fact]
     public async Task CreateAsync_WhenValidRequest_AddsMealToDay()
     {
-        var repository = new InMemoryMealPlanRepository();
-        var service = new MealPlanService(repository, new InMemoryRecipeRepository());
+        var repository = new TestMealPlanRepository();
+        var service = new MealPlanService(repository, new TestRecipeRepository());
 
         var created = await service.CreateAsync(
             new CreateMealPlanItemRequest(
@@ -28,8 +28,8 @@ public sealed class MealPlanServiceTests
     [Fact]
     public async Task ReorderAsync_WhenItemsMovedAcrossDays_PersistsDayAndSortOrder()
     {
-        var repository = new InMemoryMealPlanRepository();
-        var service = new MealPlanService(repository, new InMemoryRecipeRepository());
+        var repository = new TestMealPlanRepository();
+        var service = new MealPlanService(repository, new TestRecipeRepository());
         var initial = await service.ListAsync(CancellationToken.None);
 
         var moved = initial.First(item => item.Day == "Wednesday");
@@ -56,8 +56,8 @@ public sealed class MealPlanServiceTests
     [Fact]
     public async Task CreateAsync_WhenRecipeDoesNotExist_ReturnsNull()
     {
-        var repository = new InMemoryMealPlanRepository();
-        var service = new MealPlanService(repository, new InMemoryRecipeRepository());
+        var repository = new TestMealPlanRepository();
+        var service = new MealPlanService(repository, new TestRecipeRepository());
 
         var created = await service.CreateAsync(
             new CreateMealPlanItemRequest("Friday", Guid.NewGuid()),

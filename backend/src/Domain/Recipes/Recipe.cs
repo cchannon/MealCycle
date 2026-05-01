@@ -2,13 +2,18 @@ namespace MealCycle.Domain.Recipes;
 
 public sealed class Recipe
 {
-    public Recipe(Guid id, string title, IReadOnlyList<RecipeIngredient> ingredients, IReadOnlyList<string> steps)
+    public Recipe(
+        Guid id,
+        string title,
+        IReadOnlyList<RecipeIngredient> ingredients,
+        IReadOnlyList<string> steps,
+        DateTimeOffset? updatedAtUtc = null)
     {
         Id = id;
         Title = title;
         Ingredients = ingredients;
         Steps = steps;
-        UpdatedAtUtc = DateTimeOffset.UtcNow;
+        UpdatedAtUtc = updatedAtUtc ?? DateTimeOffset.UtcNow;
     }
 
     public Guid Id { get; }

@@ -1,4 +1,4 @@
-namespace MealCycle.Api.Configuration;
+namespace MealCycle.Application.Configuration;
 
 public sealed class AzureStorageOptions
 {

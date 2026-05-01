@@ -2,14 +2,20 @@ namespace MealCycle.Domain.MealPlans;
 
 public sealed class MealPlanItem
 {
-    public MealPlanItem(Guid id, Guid recipeId, string day, string label, int sortOrder)
+    public MealPlanItem(
+        Guid id,
+        Guid recipeId,
+        string day,
+        string label,
+        int sortOrder,
+        DateTimeOffset? updatedAtUtc = null)
     {
         Id = id;
         RecipeId = recipeId;
         Day = day;
         Label = label;
         SortOrder = sortOrder;
-        UpdatedAtUtc = DateTimeOffset.UtcNow;
+        UpdatedAtUtc = updatedAtUtc ?? DateTimeOffset.UtcNow;
     }
 
     public Guid Id { get; }

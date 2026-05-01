@@ -1,6 +1,6 @@
 using MealCycle.Application.Features.ShoppingLists;
 using MealCycle.Application.Services;
-using MealCycle.Infrastructure.Repositories;
+using MealCycle.UnitTests.Fakes;
 
 namespace MealCycle.UnitTests;
 
@@ -9,8 +9,8 @@ public sealed class ShoppingListServiceTests
     [Fact]
     public async Task PreviewAsync_WhenMealsSelected_AggregatesIngredientsFromMatchingRecipes()
     {
-        var mealPlanRepository = new InMemoryMealPlanRepository();
-        var recipeRepository = new InMemoryRecipeRepository();
+        var mealPlanRepository = new TestMealPlanRepository();
+        var recipeRepository = new TestRecipeRepository();
         var service = new ShoppingListService(mealPlanRepository, recipeRepository);
 
         var mealPlanItems = await mealPlanRepository.ListAsync(CancellationToken.None);
@@ -29,8 +29,8 @@ public sealed class ShoppingListServiceTests
     [Fact]
     public async Task PreviewAsync_WhenNoSelectedMeals_ReturnsEmptyList()
     {
-        var mealPlanRepository = new InMemoryMealPlanRepository();
-        var recipeRepository = new InMemoryRecipeRepository();
+        var mealPlanRepository = new TestMealPlanRepository();
+        var recipeRepository = new TestRecipeRepository();
         var service = new ShoppingListService(mealPlanRepository, recipeRepository);
 
         var preview = await service.PreviewAsync(new ShoppingListPreviewRequest([]), CancellationToken.None);
@@ -41,8 +41,8 @@ public sealed class ShoppingListServiceTests
     [Fact]
     public async Task PreviewAsync_WhenSelectedMealRecipeMissing_SkipsMissingRecipe()
     {
-        var mealPlanRepository = new InMemoryMealPlanRepository();
-        var recipeRepository = new InMemoryRecipeRepository();
+        var mealPlanRepository = new TestMealPlanRepository();
+        var recipeRepository = new TestRecipeRepository();
         var service = new ShoppingListService(mealPlanRepository, recipeRepository);
 
         var missingRecipeMeal = await mealPlanRepository.UpsertAsync(

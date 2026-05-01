@@ -1,6 +1,6 @@
 using MealCycle.Application.Features.Recipes;
 using MealCycle.Application.Services;
-using MealCycle.Infrastructure.Repositories;
+using MealCycle.UnitTests.Fakes;
 
 namespace MealCycle.UnitTests;
 
@@ -9,7 +9,7 @@ public sealed class RecipeServiceTests
     [Fact]
     public async Task CreateAsync_WhenValidRequest_AddsRecipe()
     {
-        var repository = new InMemoryRecipeRepository();
+        var repository = new TestRecipeRepository();
         var service = new RecipeService(repository);
 
         var request = new CreateRecipeRequest(

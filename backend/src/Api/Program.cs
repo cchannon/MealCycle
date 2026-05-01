@@ -1,13 +1,26 @@
 using MealCycle.Api.Configuration;
+using MealCycle.Application.Configuration;
+using Azure.Data.Tables;
+using Azure.Identity;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
-builder.Services.Configure<PersistenceOptions>(builder.Configuration.GetSection(PersistenceOptions.SectionName));
 builder.Services.Configure<AzureStorageOptions>(builder.Configuration.GetSection(AzureStorageOptions.SectionName));
 builder.Services.Configure<FoundryOptions>(builder.Configuration.GetSection(FoundryOptions.SectionName));
+
+builder.Services.AddSingleton(sp =>
+{
+    var storageOptions = sp.GetRequiredService<IOptions<AzureStorageOptions>>().Value;
+    if (string.IsNullOrWhiteSpace(storageOptions.TableServiceUri))
+    {
+        throw new InvalidOperationException("AzureStorage:TableServiceUri must be configured.");
+    }
+
+    return new TableServiceClient(new Uri(storageOptions.TableServiceUri), new DefaultAzureCredential());
+});
 
 builder.Services.AddCors(options =>
 {
@@ -19,11 +32,11 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddSingleton<MealCycle.Application.Interfaces.IRecipeRepository, MealCycle.Infrastructure.Repositories.InMemoryRecipeRepository>();
+builder.Services.AddScoped<MealCycle.Application.Interfaces.IRecipeRepository, MealCycle.Infrastructure.Repositories.AzureTableRecipeRepository>();
 builder.Services.AddScoped<MealCycle.Application.Services.RecipeService>();
-builder.Services.AddSingleton<MealCycle.Application.Interfaces.IMealPlanRepository, MealCycle.Infrastructure.Repositories.InMemoryMealPlanRepository>();
+builder.Services.AddScoped<MealCycle.Application.Interfaces.IMealPlanRepository, MealCycle.Infrastructure.Repositories.AzureTableMealPlanRepository>();
 builder.Services.AddScoped<MealCycle.Application.Services.MealPlanService>();
-builder.Services.AddSingleton<MealCycle.Application.Interfaces.ICookProgressRepository, MealCycle.Infrastructure.Repositories.InMemoryCookProgressRepository>();
+builder.Services.AddScoped<MealCycle.Application.Interfaces.ICookProgressRepository, MealCycle.Infrastructure.Repositories.AzureTableCookProgressRepository>();
 builder.Services.AddScoped<MealCycle.Application.Services.CookModeService>();
 builder.Services.AddScoped<MealCycle.Application.Services.ShoppingListService>();
 
@@ -40,21 +53,15 @@ app.UseCors("frontend");
 app.MapControllers();
 app.MapGet(
     "/health",
-    (IOptions<PersistenceOptions> persistence, IOptions<AzureStorageOptions> storage, IOptions<FoundryOptions> foundry) =>
+    (IOptions<AzureStorageOptions> storage, IOptions<FoundryOptions> foundry) =>
     {
-        var usingInMemoryPersistence = string.Equals(
-            persistence.Value.Provider,
-            "InMemory",
-            StringComparison.OrdinalIgnoreCase);
-
         return Results.Ok(
             new
             {
                 status = "ok",
                 infrastructureReadiness = new
                 {
-                    persistenceProvider = persistence.Value.Provider,
-                    usingInMemoryPersistence,
+                    persistenceProvider = "AzureTable",
                     tableStorageConfigured =
                         !string.IsNullOrWhiteSpace(storage.Value.TableServiceUri)
                         && !string.IsNullOrWhiteSpace(storage.Value.RecipesTableName)
