@@ -8,7 +8,7 @@ public sealed class AzureStorageOptions
 
     public string RecipesTableName { get; set; } = "recipes";
 
-    public string MealPlanTableName { get; set; } = "meal-plan-items";
+    public string MealPlanTableName { get; set; } = "mealplanitems";
 
-    public string CookProgressTableName { get; set; } = "cook-progress";
+    public string CookProgressTableName { get; set; } = "cookprogress";
 }

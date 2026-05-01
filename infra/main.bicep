@@ -19,8 +19,8 @@ param storageSkuName string = 'Standard_LRS'
 
 @description('Table names for application persistence')
 param recipesTableName string = 'recipes'
-param mealPlanTableName string = 'meal-plan-items'
-param cookProgressTableName string = 'cook-progress'
+param mealPlanTableName string = 'mealplanitems'
+param cookProgressTableName string = 'cookprogress'
 
 var storageAccountName = toLower('${workloadName}${environmentName}st')
 
@@ -62,7 +62,7 @@ resource cookProgressTable 'Microsoft.Storage/storageAccounts/tableServices/tabl
 // We will confirm model/deployment strategy before adding AI resource modules.
 
 output storageAccountName string = storageAccount.name
-output storageTableEndpoint string = 'https://${storageAccount.name}.table.core.windows.net/'
+output storageTableEndpoint string = 'https://${storageAccount.name}.table.${environment().suffixes.storage}/'
 output recipesTableOutput string = recipesTable.name
 output mealPlanTableOutput string = mealPlanTable.name
 output cookProgressTableOutput string = cookProgressTable.name

@@ -18,10 +18,10 @@
       "value": "recipes"
     },
     "mealPlanTableName": {
-      "value": "meal-plan-items"
+      "value": "mealplanitems"
     },
     "cookProgressTableName": {
-      "value": "cook-progress"
+      "value": "cookprogress"
     }
   }
 }

@@ -41,8 +41,8 @@ Examples:
 1. Storage account with Table service enabled
 2. Azure Table entities for:
    - `recipes`
-   - `meal-plan-items`
-   - `cook-progress`
+   - `mealplanitems`
+   - `cookprogress`
 3. Foundry project/model deployments for AI Tools backend integration
 
 ## Discussion gate
