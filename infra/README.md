@@ -4,6 +4,7 @@ This folder contains pre-provisioning scaffolding so we can discuss and confirm 
 
 <!-- Trigger note: workflow retry via infra path change -->
 <!-- Trigger note: workflow retry after RBAC assignment -->
+<!-- Trigger note: workflow retry after subscription-reader assignment -->
 
 ## Scope prepared
 
