@@ -1,0 +1,58 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "echo pre-tool-safety metadata loaded"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "type": "command",
+        "windows": "pwsh -NoLogo -NoProfile -File .github/hooks/scripts/pre-tool-safety.ps1",
+        "linux": "bash .github/hooks/scripts/pre-tool-safety.sh",
+        "osx": "bash .github/hooks/scripts/pre-tool-safety.sh",
+        "timeout": 15
+      }
+    ]
+  },
+  "metadata": {
+    "version": 1,
+    "intent": "Reduce deployment churn by auto-allowing safe diagnostics and enforcing non-destructive execution defaults.",
+    "rules": {
+      "allow": [
+        "gh auth status",
+        "gh run list",
+        "gh run view",
+        "gh run watch",
+        "git status -sb",
+        "git push",
+        "az account show",
+        "az deployment group what-if",
+        "az deployment group create",
+        "az deployment group show",
+        "az role assignment list",
+        "az role assignment create",
+        "Select-String",
+        "dotnet build",
+        "dotnet test"
+      ],
+      "deny": [
+        "git reset --hard",
+        "git checkout --",
+        "az group delete"
+      ],
+      "guidance": {
+        "preferNonInteractive": true,
+        "preferPollingOverWatchWhenPossible": true,
+        "requirePreflightForInfraDeploy": true,
+        "preflightChecks": [
+          "GitHub identity and repository access",
+          "Workflow visibility and trigger path",
+          "Azure tenant and subscription context",
+          "Deployment identity RBAC at required scopes"
+        ]
+      }
+    }
+  }
+}

@@ -7,6 +7,18 @@
     ".github/prompts": true
   },
   "chat.tools.terminal.autoApprove": {
-    "npm run build": true
+    "dotnet build": true,
+    "dotnet test": true,
+    "npm run build": true,
+    "gh": true,
+    "git -C \"c:\\Users\\CharlesChannon\\source\\repos\\MealCycle\" status -sb": true,
+    "git -C \"c:\\Users\\CharlesChannon\\source\\repos\\MealCycle\" push origin main": true,
+    "az account show --output table": true,
+    "az deployment group what-if": true,
+    "az deployment group create": true,
+    "az role assignment list": true,
+    "az role assignment create": true,
+    "Select-String": true,
+    "ForEach-Object": true
   }
 }

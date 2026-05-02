@@ -55,6 +55,31 @@ applyTo: ".github/workflows/**"
 - API: deploy to Azure App Service via `azure/webapps-deploy@v2` or Azure Functions via `azure/functions-action@v1`
 - Bicep infrastructure changes: `az deployment group create --confirm-with-what-if` in a separate infra workflow
 
+### Infra Workflow Contract
+- Infra workflow should run in this order:
+  1. validate required variables and files
+  2. Azure OIDC login
+  3. `what-if`
+  4. deploy
+  5. extract deployment outputs
+  6. apply runtime settings to app targets (when configured)
+  7. publish deployment summary and artifact
+- Deployment output extraction is required for traceability and follow-on app configuration
+
+### Trigger and Retry Strategy
+- Path-filtered infra workflows must document their trigger paths and include an explicit fallback trigger strategy
+- If `workflow_dispatch` or rerun permissions are unavailable, use a minimal infra-path change commit to trigger deployment
+- Prefer push-trigger fallback over manual local deployment when CI deployment is the repository standard
+
+### Fail-Fast Diagnostics
+- Validate required vars before Azure login and fail with actionable messages naming missing vars
+- On OIDC login failures, log guidance for checking federated credential subject and required RBAC
+- On deploy failures, capture failed step logs and include a short remediation summary in the workflow output
+
+### Runtime Configuration Propagation
+- If infra outputs are needed by running apps, workflow should apply settings to App Service and/or Function App when target names are configured
+- If no runtime targets are configured, workflow should log a clear skip message and continue successfully
+
 ### Playwright in CI
 - Install browsers: `npx playwright install --with-deps chromium`
 - Run: `npx playwright test --reporter=github`

@@ -18,6 +18,13 @@ description: "Use when designing or configuring Azure infrastructure: App Servic
   - Service Bus: `Azure Service Bus Data Sender` / `Azure Service Bus Data Receiver`
   - Key Vault secrets: `Key Vault Secrets User`
 
+### Deployment Identity Baseline (GitHub OIDC)
+- For GitHub Actions infra deployment identities, require:
+  - `Reader` at subscription scope (needed for reliable subscription discovery during login)
+  - `Contributor` at target resource group scope (needed for group-scoped deployments)
+- Treat missing either role as a preflight blocker and resolve before rerunning workflows
+- OIDC subject should be environment-scoped where possible (for example: `repo:<owner>/<repo>:environment:dev`)
+
 ### Key Vault
 - One Key Vault per environment — never share across environments
 - App Services/Functions reference secrets via Key Vault references in app settings: `@Microsoft.KeyVault(SecretUri=...)`
@@ -49,6 +56,25 @@ description: "Use when designing or configuring Azure infrastructure: App Servic
 - Parameterise environment differences (`environmentName`, `location`) — no hardcoded environment values
 - Run `az deployment group create --what-if` before applying infrastructure changes
 - Store Bicep files in `infra/` at the repo root
+
+### Azure Table Naming Rules
+- Table names must be 3-63 characters, alphanumeric only, and must start with a letter
+- Do not use hyphens or reserved names (for example `tables`)
+- Keep naming casing stable even though Azure Table names are case-insensitive
+
+### Infra Output Contract
+- Every infra deployment that provisions storage for app persistence must output:
+  - storage account name
+  - table service endpoint URI
+  - table names for each workload entity
+- Downstream runtime configuration should be sourced from deployment outputs, not duplicated defaults
+
+### Infra Preflight
+- Before deploying from CI, verify:
+  - required GitHub variables are present
+  - parameter file exists for the selected environment
+  - table names in parameters satisfy Azure Table naming rules
+  - target resource group exists or is intentionally created by pipeline
 
 ### Logic Apps
 - Use Consumption plan Logic Apps for low-frequency automation triggered by events (webhooks, schedules)
