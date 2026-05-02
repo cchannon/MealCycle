@@ -87,12 +87,15 @@ jobs:
           echo "recipesTableName=$(jq -r '.properties.outputs.recipesTableOutput.value // empty' deployment-result.json)" >> "$GITHUB_OUTPUT"
           echo "mealPlanTableName=$(jq -r '.properties.outputs.mealPlanTableOutput.value // empty' deployment-result.json)" >> "$GITHUB_OUTPUT"
           echo "cookProgressTableName=$(jq -r '.properties.outputs.cookProgressTableOutput.value // empty' deployment-result.json)" >> "$GITHUB_OUTPUT"
+          WEBAPP_FROM_OUTPUT=$(jq -r '.properties.outputs.webAppNameOutput.value // empty' deployment-result.json)
+          EFFECTIVE_WEBAPP_NAME="${AZURE_WEBAPP_NAME:-$WEBAPP_FROM_OUTPUT}"
+          echo "webAppName=$EFFECTIVE_WEBAPP_NAME" >> "$GITHUB_OUTPUT"
 
       - name: Apply runtime settings to App Service (optional)
-        if: env.AZURE_WEBAPP_NAME != ''
+        if: steps.extract_outputs.outputs.webAppName != ''
         run: |
           az webapp config appsettings set \
-            --name "$AZURE_WEBAPP_NAME" \
+            --name "${{ steps.extract_outputs.outputs.webAppName }}" \
             --resource-group "$AZURE_RESOURCE_GROUP" \
             --settings \
               AzureStorage__TableServiceUri="${{ steps.extract_outputs.outputs.storageTableEndpoint }}" \
@@ -113,10 +116,10 @@ jobs:
               AzureStorage__CookProgressTableName="${{ steps.extract_outputs.outputs.cookProgressTableName }}"
 
       - name: Enable managed identity and table RBAC for App Service (optional)
-        if: env.AZURE_WEBAPP_NAME != ''
+        if: steps.extract_outputs.outputs.webAppName != ''
         run: |
           WEBAPP_PRINCIPAL_ID=$(az webapp identity assign \
-            --name "$AZURE_WEBAPP_NAME" \
+            --name "${{ steps.extract_outputs.outputs.webAppName }}" \
             --resource-group "$AZURE_RESOURCE_GROUP" \
             --query principalId -o tsv)
 
@@ -175,7 +178,7 @@ jobs:
           fi
 
       - name: Runtime settings target not configured
-        if: env.AZURE_WEBAPP_NAME == '' && env.AZURE_FUNCTIONAPP_NAME == ''
+        if: steps.extract_outputs.outputs.webAppName == '' && env.AZURE_FUNCTIONAPP_NAME == ''
         run: |
           echo "No AZURE_WEBAPP_NAME or AZURE_FUNCTIONAPP_NAME variable configured. Skipping runtime app settings update."
 
@@ -259,12 +262,15 @@ jobs:
           echo "recipesTableName=$(jq -r '.properties.outputs.recipesTableOutput.value // empty' deployment-result.json)" >> "$GITHUB_OUTPUT"
           echo "mealPlanTableName=$(jq -r '.properties.outputs.mealPlanTableOutput.value // empty' deployment-result.json)" >> "$GITHUB_OUTPUT"
           echo "cookProgressTableName=$(jq -r '.properties.outputs.cookProgressTableOutput.value // empty' deployment-result.json)" >> "$GITHUB_OUTPUT"
+          WEBAPP_FROM_OUTPUT=$(jq -r '.properties.outputs.webAppNameOutput.value // empty' deployment-result.json)
+          EFFECTIVE_WEBAPP_NAME="${AZURE_WEBAPP_NAME:-$WEBAPP_FROM_OUTPUT}"
+          echo "webAppName=$EFFECTIVE_WEBAPP_NAME" >> "$GITHUB_OUTPUT"
 
       - name: Apply runtime settings to App Service (optional)
-        if: env.AZURE_WEBAPP_NAME != ''
+        if: steps.extract_outputs.outputs.webAppName != ''
         run: |
           az webapp config appsettings set \
-            --name "$AZURE_WEBAPP_NAME" \
+            --name "${{ steps.extract_outputs.outputs.webAppName }}" \
             --resource-group "$AZURE_RESOURCE_GROUP" \
             --settings \
               AzureStorage__TableServiceUri="${{ steps.extract_outputs.outputs.storageTableEndpoint }}" \
@@ -285,10 +291,10 @@ jobs:
               AzureStorage__CookProgressTableName="${{ steps.extract_outputs.outputs.cookProgressTableName }}"
 
       - name: Enable managed identity and table RBAC for App Service (optional)
-        if: env.AZURE_WEBAPP_NAME != ''
+        if: steps.extract_outputs.outputs.webAppName != ''
         run: |
           WEBAPP_PRINCIPAL_ID=$(az webapp identity assign \
-            --name "$AZURE_WEBAPP_NAME" \
+            --name "${{ steps.extract_outputs.outputs.webAppName }}" \
             --resource-group "$AZURE_RESOURCE_GROUP" \
             --query principalId -o tsv)
 
@@ -347,7 +353,7 @@ jobs:
           fi
 
       - name: Runtime settings target not configured
-        if: env.AZURE_WEBAPP_NAME == '' && env.AZURE_FUNCTIONAPP_NAME == ''
+        if: steps.extract_outputs.outputs.webAppName == '' && env.AZURE_FUNCTIONAPP_NAME == ''
         run: |
           echo "No AZURE_WEBAPP_NAME or AZURE_FUNCTIONAPP_NAME variable configured. Skipping runtime app settings update."
 
@@ -431,12 +437,15 @@ jobs:
           echo "recipesTableName=$(jq -r '.properties.outputs.recipesTableOutput.value // empty' deployment-result.json)" >> "$GITHUB_OUTPUT"
           echo "mealPlanTableName=$(jq -r '.properties.outputs.mealPlanTableOutput.value // empty' deployment-result.json)" >> "$GITHUB_OUTPUT"
           echo "cookProgressTableName=$(jq -r '.properties.outputs.cookProgressTableOutput.value // empty' deployment-result.json)" >> "$GITHUB_OUTPUT"
+          WEBAPP_FROM_OUTPUT=$(jq -r '.properties.outputs.webAppNameOutput.value // empty' deployment-result.json)
+          EFFECTIVE_WEBAPP_NAME="${AZURE_WEBAPP_NAME:-$WEBAPP_FROM_OUTPUT}"
+          echo "webAppName=$EFFECTIVE_WEBAPP_NAME" >> "$GITHUB_OUTPUT"
 
       - name: Apply runtime settings to App Service (optional)
-        if: env.AZURE_WEBAPP_NAME != ''
+        if: steps.extract_outputs.outputs.webAppName != ''
         run: |
           az webapp config appsettings set \
-            --name "$AZURE_WEBAPP_NAME" \
+            --name "${{ steps.extract_outputs.outputs.webAppName }}" \
             --resource-group "$AZURE_RESOURCE_GROUP" \
             --settings \
               AzureStorage__TableServiceUri="${{ steps.extract_outputs.outputs.storageTableEndpoint }}" \
@@ -457,10 +466,10 @@ jobs:
               AzureStorage__CookProgressTableName="${{ steps.extract_outputs.outputs.cookProgressTableName }}"
 
       - name: Enable managed identity and table RBAC for App Service (optional)
-        if: env.AZURE_WEBAPP_NAME != ''
+        if: steps.extract_outputs.outputs.webAppName != ''
         run: |
           WEBAPP_PRINCIPAL_ID=$(az webapp identity assign \
-            --name "$AZURE_WEBAPP_NAME" \
+            --name "${{ steps.extract_outputs.outputs.webAppName }}" \
             --resource-group "$AZURE_RESOURCE_GROUP" \
             --query principalId -o tsv)
 
@@ -519,7 +528,7 @@ jobs:
           fi
 
       - name: Runtime settings target not configured
-        if: env.AZURE_WEBAPP_NAME == '' && env.AZURE_FUNCTIONAPP_NAME == ''
+        if: steps.extract_outputs.outputs.webAppName == '' && env.AZURE_FUNCTIONAPP_NAME == ''
         run: |
           echo "No AZURE_WEBAPP_NAME or AZURE_FUNCTIONAPP_NAME variable configured. Skipping runtime app settings update."
 

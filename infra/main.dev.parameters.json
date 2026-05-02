@@ -14,6 +14,9 @@
     "storageSkuName": {
       "value": "Standard_LRS"
     },
+    "appServicePlanSkuName": {
+      "value": "F1"
+    },
     "recipesTableName": {
       "value": "recipes"
     },

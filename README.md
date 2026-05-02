@@ -64,6 +64,10 @@ npm run build
 This repository is prepared to deploy baseline infrastructure from `infra/main.bicep` using GitHub Actions.
 These steps are written for public, anonymous users who want to replicate this setup in their own Azure tenant/subscription.
 
+Current baseline infra includes:
+1. Azure Storage Account + Tables for persistence.
+2. Azure App Service Plan + Azure Web App host for the backend API.
+
 ### 1. Prerequisites
 
 1. Azure subscription and target resource groups for `dev`, `staging`, and `production`.
@@ -169,6 +173,7 @@ Deployment output handling:
   - `recipesTableName`
   - `mealPlanTableName`
   - `cookProgressTableName`
+  - `webAppName`
 3. The full deployment JSON is uploaded as a workflow artifact for downstream jobs.
 
 This is the bridge to persistence rollout:
