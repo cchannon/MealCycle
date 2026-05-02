@@ -178,7 +178,8 @@ This is the bridge to persistence rollout:
   - `AzureStorage__RecipesTableName`
   - `AzureStorage__MealPlanTableName`
   - `AzureStorage__CookProgressTableName`
-3. If neither runtime target variable is configured, deployment still succeeds and the workflow logs that runtime settings were skipped.
+3. When app names are configured, the workflow also enables system-assigned managed identity on each app and grants `Storage Table Data Contributor` on the deployed storage account.
+4. If neither runtime target variable is configured, deployment still succeeds and the workflow logs that runtime settings and identity/RBAC updates were skipped.
 
 Suggested deployment command in workflow jobs:
 

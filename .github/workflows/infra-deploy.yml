@@ -112,6 +112,68 @@ jobs:
               AzureStorage__MealPlanTableName="${{ steps.extract_outputs.outputs.mealPlanTableName }}" \
               AzureStorage__CookProgressTableName="${{ steps.extract_outputs.outputs.cookProgressTableName }}"
 
+      - name: Enable managed identity and table RBAC for App Service (optional)
+        if: env.AZURE_WEBAPP_NAME != ''
+        run: |
+          WEBAPP_PRINCIPAL_ID=$(az webapp identity assign \
+            --name "$AZURE_WEBAPP_NAME" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --query principalId -o tsv)
+
+          STORAGE_SCOPE=$(az storage account show \
+            --name "${{ steps.extract_outputs.outputs.storageAccountName }}" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --query id -o tsv)
+
+          ROLE_NAME="Storage Table Data Contributor"
+          EXISTING_ASSIGNMENT_COUNT=$(az role assignment list \
+            --assignee-object-id "$WEBAPP_PRINCIPAL_ID" \
+            --scope "$STORAGE_SCOPE" \
+            --role "$ROLE_NAME" \
+            --query "length(@)" -o tsv)
+
+          if [ "$EXISTING_ASSIGNMENT_COUNT" = "0" ]; then
+            az role assignment create \
+              --assignee-object-id "$WEBAPP_PRINCIPAL_ID" \
+              --assignee-principal-type ServicePrincipal \
+              --role "$ROLE_NAME" \
+              --scope "$STORAGE_SCOPE" \
+              --output none
+          else
+            echo "Role assignment already exists for App Service managed identity."
+          fi
+
+      - name: Enable managed identity and table RBAC for Function App (optional)
+        if: env.AZURE_FUNCTIONAPP_NAME != ''
+        run: |
+          FUNCTIONAPP_PRINCIPAL_ID=$(az functionapp identity assign \
+            --name "$AZURE_FUNCTIONAPP_NAME" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --query principalId -o tsv)
+
+          STORAGE_SCOPE=$(az storage account show \
+            --name "${{ steps.extract_outputs.outputs.storageAccountName }}" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --query id -o tsv)
+
+          ROLE_NAME="Storage Table Data Contributor"
+          EXISTING_ASSIGNMENT_COUNT=$(az role assignment list \
+            --assignee-object-id "$FUNCTIONAPP_PRINCIPAL_ID" \
+            --scope "$STORAGE_SCOPE" \
+            --role "$ROLE_NAME" \
+            --query "length(@)" -o tsv)
+
+          if [ "$EXISTING_ASSIGNMENT_COUNT" = "0" ]; then
+            az role assignment create \
+              --assignee-object-id "$FUNCTIONAPP_PRINCIPAL_ID" \
+              --assignee-principal-type ServicePrincipal \
+              --role "$ROLE_NAME" \
+              --scope "$STORAGE_SCOPE" \
+              --output none
+          else
+            echo "Role assignment already exists for Function App managed identity."
+          fi
+
       - name: Runtime settings target not configured
         if: env.AZURE_WEBAPP_NAME == '' && env.AZURE_FUNCTIONAPP_NAME == ''
         run: |
@@ -222,6 +284,68 @@ jobs:
               AzureStorage__MealPlanTableName="${{ steps.extract_outputs.outputs.mealPlanTableName }}" \
               AzureStorage__CookProgressTableName="${{ steps.extract_outputs.outputs.cookProgressTableName }}"
 
+      - name: Enable managed identity and table RBAC for App Service (optional)
+        if: env.AZURE_WEBAPP_NAME != ''
+        run: |
+          WEBAPP_PRINCIPAL_ID=$(az webapp identity assign \
+            --name "$AZURE_WEBAPP_NAME" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --query principalId -o tsv)
+
+          STORAGE_SCOPE=$(az storage account show \
+            --name "${{ steps.extract_outputs.outputs.storageAccountName }}" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --query id -o tsv)
+
+          ROLE_NAME="Storage Table Data Contributor"
+          EXISTING_ASSIGNMENT_COUNT=$(az role assignment list \
+            --assignee-object-id "$WEBAPP_PRINCIPAL_ID" \
+            --scope "$STORAGE_SCOPE" \
+            --role "$ROLE_NAME" \
+            --query "length(@)" -o tsv)
+
+          if [ "$EXISTING_ASSIGNMENT_COUNT" = "0" ]; then
+            az role assignment create \
+              --assignee-object-id "$WEBAPP_PRINCIPAL_ID" \
+              --assignee-principal-type ServicePrincipal \
+              --role "$ROLE_NAME" \
+              --scope "$STORAGE_SCOPE" \
+              --output none
+          else
+            echo "Role assignment already exists for App Service managed identity."
+          fi
+
+      - name: Enable managed identity and table RBAC for Function App (optional)
+        if: env.AZURE_FUNCTIONAPP_NAME != ''
+        run: |
+          FUNCTIONAPP_PRINCIPAL_ID=$(az functionapp identity assign \
+            --name "$AZURE_FUNCTIONAPP_NAME" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --query principalId -o tsv)
+
+          STORAGE_SCOPE=$(az storage account show \
+            --name "${{ steps.extract_outputs.outputs.storageAccountName }}" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --query id -o tsv)
+
+          ROLE_NAME="Storage Table Data Contributor"
+          EXISTING_ASSIGNMENT_COUNT=$(az role assignment list \
+            --assignee-object-id "$FUNCTIONAPP_PRINCIPAL_ID" \
+            --scope "$STORAGE_SCOPE" \
+            --role "$ROLE_NAME" \
+            --query "length(@)" -o tsv)
+
+          if [ "$EXISTING_ASSIGNMENT_COUNT" = "0" ]; then
+            az role assignment create \
+              --assignee-object-id "$FUNCTIONAPP_PRINCIPAL_ID" \
+              --assignee-principal-type ServicePrincipal \
+              --role "$ROLE_NAME" \
+              --scope "$STORAGE_SCOPE" \
+              --output none
+          else
+            echo "Role assignment already exists for Function App managed identity."
+          fi
+
       - name: Runtime settings target not configured
         if: env.AZURE_WEBAPP_NAME == '' && env.AZURE_FUNCTIONAPP_NAME == ''
         run: |
@@ -331,6 +455,68 @@ jobs:
               AzureStorage__RecipesTableName="${{ steps.extract_outputs.outputs.recipesTableName }}" \
               AzureStorage__MealPlanTableName="${{ steps.extract_outputs.outputs.mealPlanTableName }}" \
               AzureStorage__CookProgressTableName="${{ steps.extract_outputs.outputs.cookProgressTableName }}"
+
+      - name: Enable managed identity and table RBAC for App Service (optional)
+        if: env.AZURE_WEBAPP_NAME != ''
+        run: |
+          WEBAPP_PRINCIPAL_ID=$(az webapp identity assign \
+            --name "$AZURE_WEBAPP_NAME" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --query principalId -o tsv)
+
+          STORAGE_SCOPE=$(az storage account show \
+            --name "${{ steps.extract_outputs.outputs.storageAccountName }}" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --query id -o tsv)
+
+          ROLE_NAME="Storage Table Data Contributor"
+          EXISTING_ASSIGNMENT_COUNT=$(az role assignment list \
+            --assignee-object-id "$WEBAPP_PRINCIPAL_ID" \
+            --scope "$STORAGE_SCOPE" \
+            --role "$ROLE_NAME" \
+            --query "length(@)" -o tsv)
+
+          if [ "$EXISTING_ASSIGNMENT_COUNT" = "0" ]; then
+            az role assignment create \
+              --assignee-object-id "$WEBAPP_PRINCIPAL_ID" \
+              --assignee-principal-type ServicePrincipal \
+              --role "$ROLE_NAME" \
+              --scope "$STORAGE_SCOPE" \
+              --output none
+          else
+            echo "Role assignment already exists for App Service managed identity."
+          fi
+
+      - name: Enable managed identity and table RBAC for Function App (optional)
+        if: env.AZURE_FUNCTIONAPP_NAME != ''
+        run: |
+          FUNCTIONAPP_PRINCIPAL_ID=$(az functionapp identity assign \
+            --name "$AZURE_FUNCTIONAPP_NAME" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --query principalId -o tsv)
+
+          STORAGE_SCOPE=$(az storage account show \
+            --name "${{ steps.extract_outputs.outputs.storageAccountName }}" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --query id -o tsv)
+
+          ROLE_NAME="Storage Table Data Contributor"
+          EXISTING_ASSIGNMENT_COUNT=$(az role assignment list \
+            --assignee-object-id "$FUNCTIONAPP_PRINCIPAL_ID" \
+            --scope "$STORAGE_SCOPE" \
+            --role "$ROLE_NAME" \
+            --query "length(@)" -o tsv)
+
+          if [ "$EXISTING_ASSIGNMENT_COUNT" = "0" ]; then
+            az role assignment create \
+              --assignee-object-id "$FUNCTIONAPP_PRINCIPAL_ID" \
+              --assignee-principal-type ServicePrincipal \
+              --role "$ROLE_NAME" \
+              --scope "$STORAGE_SCOPE" \
+              --output none
+          else
+            echo "Role assignment already exists for Function App managed identity."
+          fi
 
       - name: Runtime settings target not configured
         if: env.AZURE_WEBAPP_NAME == '' && env.AZURE_FUNCTIONAPP_NAME == ''
